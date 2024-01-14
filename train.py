@@ -8,7 +8,8 @@ from easydict import EasyDict
 from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
-from model import Openclip,FaceModel,backbone_timm
+from model import Openclip,FaceModel,backbone_timm,GenderModel,EmoModel,RaceModel,MaskModel,SkinModel,AgeModel,build_model
+from torchsampler import ImbalancedDatasetSampler
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--cfg_file", type=str, required=True)
@@ -23,7 +24,7 @@ def prepare_data(cfg, args):
     val_dataset = FaceDataset( cfg.data.val_anno,cfg.data.img_folder)
     print("Total Train Dataset:", len(train_dataset))
     print("Total Val Dataset:", len(val_dataset))
-    train_dataloader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=args.num_workers, shuffle=True)
+    train_dataloader = DataLoader(train_dataset, batch_size=args.batch_size, num_workers=args.num_workers,shuffle=True)
     val_dataloader = DataLoader(val_dataset, batch_size=args.batch_size, num_workers=args.num_workers, shuffle=False)
     return train_dataloader, val_dataloader
 
@@ -34,14 +35,15 @@ if __name__ == '__main__':
         cfg = yaml.load(f, Loader=yaml.FullLoader)
         cfg = EasyDict(cfg)
     train_dataloader, val_dataloader = prepare_data(cfg, args)
-    logger = TensorBoardLogger("lightning_logs", name=cfg.model.model_name)
+    logger = TensorBoardLogger("model_emo", name=cfg.model.model_emo)
     early_stop = EarlyStopping(monitor="val_loss", mode="min")
     checkpoint_callback = ModelCheckpoint(monitor="val_loss", mode="min")
     # backbone,embed_size=Openclip(name=cfg.model.model_name,pretrained=cfg.model.pretrained_name)
-    backbone,embed_size=backbone_timm(cfg.model.model_name)
-    model=FaceModel(backbone,embed_size,cfg)
+    backbone,embed_size=backbone_timm(cfg.model.model_emo)
+    # backbone=build_model(cfg.model.model_age)
+    model=EmoModel(backbone,embed_size,cfg)
     trainer = pl.Trainer(
-        max_epochs=100,
+        max_epochs=200,
         logger=logger,
         accelerator = 'gpu',
         check_val_every_n_epoch=1,

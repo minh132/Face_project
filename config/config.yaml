@@ -13,7 +13,10 @@ data:
     val_anno: '/root/code/exp/faceany/label/val_data.csv'
 
 model:
-    backbone_type: 'timm'
+    backbone_type: 'openclip'
     model_name: 'convnextv2_tiny.fcmae_ft_in22k_in1k'
+    # model_name: 'ViT-B-16'
     pretrained_name: 'laion2b_s34b_b88k'
-
+    model_age: 'convnextv2_base.fcmae_ft_in22k_in1k'
+    model_gender:  'convnextv2_base.fcmae_ft_in22k_in1k'
+    model_emo: 'convnextv2_base.fcmae_ft_in22k_in1k'

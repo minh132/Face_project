@@ -1,0 +1,1 @@
+python infer.py --cfg_file config/config.yaml

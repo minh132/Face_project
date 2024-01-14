@@ -56,6 +56,7 @@ class FaceDataset(Dataset):
             T.ToTensor(),
             T.Normalize(mean=[0.485, 0.456, 0.406],
                       std=[0.229, 0.224, 0.225])
+
         ])
     def __getitem__(self,index):
         anno=self.anno.iloc[index]
@@ -63,9 +64,9 @@ class FaceDataset(Dataset):
         img=Image.open(img_path).convert('RGB')
         x,y,w,h=map(int,json.loads(anno['bbox']))
         image_array = np.array(img)
-        cropped_image = image_array[y:y+h, x:x+w]
+        cropped_image = image_array[y:y+h+10, x:x+w+10]
         cropped_image = Image.fromarray(cropped_image)
-        cropped_image = self.transform(cropped_image)
+        cropped_image = self.transform(cropped_image)    
         age=AGE[anno['age']]
         race=RACE[anno['race']]
         masked=MASK[anno['masked']]
@@ -78,7 +79,7 @@ class FaceDataset(Dataset):
 
 if __name__=="__main__":
     ds=FaceDataset(csv_anno='/root/code/exp/faceany/label/train_data.csv',img_dir='/root/code/exp/faceany/data')
-    print(ds[1])
+    print(ds[18])
 
 
     
