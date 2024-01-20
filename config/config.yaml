@@ -13,15 +13,6 @@ data:
     val_anno: '/root/code/exp/faceany/label/val_data.csv'
 
 model:
-    backbone_type: 'openclip'
+    backbone_type: 'timm'
     model_name: 'convnextv2_base.fcmae_ft_in22k_in1k'
-    # model_name: 'ViT-B-16'
-    pretrained_name: 'laion2b_s34b_b88k'
-    model_age: 'convnextv2_base.fcmae_ft_in22k_in1k'
-    model_gender:  'convnextv2_base.fcmae_ft_in22k_in1k'
-    model_emo: 'convnextv2_large.fcmae_ft_in22k_in1k'
-    model_skin: 'convnextv2_base.fcmae_ft_in22k_in1k'
-    model_skinrace: 'convnextv2_base.fcmae_ft_in22k_in1k'
-    model_agegender: 'convnextv2_base.fcmae_ft_in22k_in1k'
-    model_race : 'convnextv2_base.fcmae_ft_in22k_in1k'
-    model_mask: 'convnextv2_base.fcmae_ft_in22k_in1k'
+    

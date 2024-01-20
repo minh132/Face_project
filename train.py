@@ -8,7 +8,7 @@ from easydict import EasyDict
 from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
-from ModelFace import FaceModel,GenderModel,EmoModel,RaceModel,MaskModel,SkinModel,AgeModel,SkinRaceModel,AgeGenderModel
+from ModelFace import FaceModel
 from model import backbone_timm,build_model
 from torchsampler import ImbalancedDatasetSampler
 def get_args():
@@ -36,13 +36,12 @@ if __name__ == '__main__':
         cfg = yaml.load(f, Loader=yaml.FullLoader)
         cfg = EasyDict(cfg)
     train_dataloader, val_dataloader = prepare_data(cfg, args)
-    logger = TensorBoardLogger("mode_emo", name=cfg.model.model_emo)
+    logger = TensorBoardLogger("mode_all", name=cfg.model.model_name)
     early_stop = EarlyStopping(monitor="val_loss", mode="min")
     checkpoint_callback = ModelCheckpoint(monitor="val_loss", mode="min")
-    # backbone,embed_size=Openclip(name=cfg.model.model_name,pretrained=cfg.model.pretrained_name)
-    backbone,embed_size=backbone_timm(cfg.model.model_emo)
-    # backbone=build_model(cfg.model.model_emo)
-    model=EmoModel(backbone,embed_size,cfg)
+    backbone,embed_size=backbone_timm(cfg.model.model_name)
+
+    model=FaceModel(backbone,embed_size,cfg)
     trainer = pl.Trainer(
         max_epochs=200,
         logger=logger,
