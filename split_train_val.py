@@ -2,9 +2,9 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 
-csv_file_path = '/root/code/exp/faceany/label/labels.csv'
+csv_file_path = '/root/code/exp/faceany/label/merge_label.csv'
 df = pd.read_csv(csv_file_path)
-stratify_columns = ['gender']
+stratify_columns = ['skintone','gender']
 
 
 # Chia tập train và tập validation với giữ nguyên phân phối của các cột

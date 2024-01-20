@@ -1,13 +1,13 @@
-import open_clip
+
 import torch
 import timm
 # from AdaFace import build_model
 
-def Openclip(name,pretrained):
-    model,_,_ = open_clip.create_model_and_transforms(model_name=name,pretrained=pretrained)
-    inp=torch.rand(1,3,224,224)
-    _,embed_size=model(inp)[0].shape
-    return model,embed_size
+# def Openclip(name,pretrained):
+#     model,_,_ = open_clip.create_model_and_transforms(model_name=name,pretrained=pretrained)
+#     inp=torch.rand(1,3,224,224)
+#     _,embed_size=model(inp)[0].shape
+#     return model,embed_size
 
 def backbone_timm(name):
     model = timm.create_model(name,

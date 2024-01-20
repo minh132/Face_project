@@ -14,5 +14,11 @@ retinaface/
 check.py
 test.zip
 check.py
+test/
+*.json
+mode_all/
+mode_emo/
+guide_test/
+
 
 

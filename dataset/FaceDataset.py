@@ -6,6 +6,7 @@ import os
 from PIL import Image
 import json 
 import numpy as np 
+import random 
 
 AGE= {
         '20-30s':0,
@@ -76,6 +77,44 @@ class FaceDataset(Dataset):
         return cropped_image,age,race,masked,skin,emotion,gender
     def __len__(self):
         return len(self.anno)
+
+def collate_fn(batch):
+    images, ages, races, maskeds, skins, emotions, genders = zip(*batch)
+
+    # Convert everything to tensors
+    images = torch.stack(images)
+    ages = torch.tensor(ages)
+    races = torch.tensor(races)
+    maskeds = torch.tensor(maskeds)
+    skins = torch.tensor(skins)
+    emotions = torch.tensor(emotions)
+    genders = torch.tensor(genders)
+
+    # Apply MixUp to the batch
+    indices = list(range(len(images)))
+    random.shuffle(indices)
+
+    mixed_images = []
+    mixed_ages = []
+    mixed_age1 = []
+    mixed_age2=[]
+
+    for i in range(len(indices)//2):
+        idx1, idx2 = indices[2*i], indices[2*i + 1]
+        img1, age1 = images[idx1], ages[idx1]
+        img2, age2 = images[idx2], ages[idx2]
+        
+        beta = 0.9  
+        mixed_img = beta * img1 + (1 - beta) * img2
+        mixed_age = beta * age1 + (1 - beta) * age2
+
+        mixed_images.append(mixed_img)
+        
+        
+
+    mixed_images = torch.stack(mixed_images)
+    
+    return mixed_images,ages,  races, maskeds, skins, emotions, genders
 
 if __name__=="__main__":
     ds=FaceDataset(csv_anno='/root/code/exp/faceany/label/train_data.csv',img_dir='/root/code/exp/faceany/data')
